@@ -1,0 +1,44 @@
+import { useRouter } from "next/router";
+import getPDFFiles from "../lib/getPDFFiles";
+
+export default function File({ filePath }) {
+  const router = useRouter();
+  const { filename } = router.query;
+
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div>
+      <h1>Displaying: {filename}</h1>
+      <embed src={filePath} type="application/pdf" width="100%" height="600px" style="height:80vh" />
+    </div>
+  );
+}
+
+export async function getStaticPaths() {
+  const fileMap = getPDFFiles("./public");
+  const paths = Object.keys(fileMap).map((filename) => ({
+    params: { filename },
+  }));
+
+  return { paths, fallback: true };
+}
+
+export async function getStaticProps({ params }) {
+  const fileMap = getPDFFiles("./public");
+  const filePath = fileMap[params.filename].replace("public", "");
+
+  if (!filePath) {
+    return {
+      notFound: true,
+    };
+  }
+
+  return {
+    props: {
+      filePath,
+    },
+  };
+}
