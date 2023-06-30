@@ -69,7 +69,6 @@ export default function ShowFile({ fileTree }) {
       const options = {
         width: "100%",
         height: "90vh",
-        //style: { height: "90vh" }
       };
 
       PDFObject.embed(pdfUrl, containerRef.current, options);
