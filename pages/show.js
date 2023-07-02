@@ -2,7 +2,8 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useRef } from "react";
 import convertDirectoryToJson from "../lib/convertDirectoryToJson";
 import findPath from "../lib/findPath";
-import PDFObject from "pdfobject";
+import { redirect } from 'next/dist/server/api-utils';
+ import PDFObject from "pdfobject";
 
 export default function ShowFile({ fileTree }) {
     const router = useRouter();
@@ -41,7 +42,7 @@ export default function ShowFile({ fileTree }) {
     }
 
     let filename = filePath.substring(filePath.lastIndexOf("/") + 1);
-    const url = filePath;
+    const url = "/" + filePath;
     // let host = window.location.hostname;
     // if (host != "localhost") 
     // {
@@ -62,22 +63,26 @@ export default function ShowFile({ fileTree }) {
     //   </div>
     // );
 
+    // redirect(url);
+    // return;
+
     const containerRef = useRef(null);
 
     useEffect(() => {
-      const pdfUrl = url;
-      const options = {
-        width: "100%",
-        height: "90vh",
-      };
+        router.push(url);
+    //   const pdfUrl = url;
+    //   const options = {
+    //     width: "100%",
+    //     height: "90vh",
+    //   };
 
-      PDFObject.embed(pdfUrl, containerRef.current, options);
+    //   PDFObject.embed(pdfUrl, containerRef.current, options);
     }, []);
 
     return (
       <div>
         <h1>
-          Displaying: <a href={filePath}>{filename}</a>
+          Continue to <a href={filePath}>{filename}</a>
         </h1>
         <div ref={containerRef}></div>
       </div>
